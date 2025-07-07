@@ -8,41 +8,71 @@ The primary identifier linking all these files is the `DA_STATUS_NUMBER`.
 
 ### 1. `permits.csv`
 
-This is the main file and contains the core information for each drilling permit application. Each row represents a single, unique permit application block.
+This is the main file and contains the core information for each drilling permit application. Each row represents a single, unique permit application block. The columns are grouped below by category for easier understanding.
 
-**Key Columns:**
+---
 
-| Column Name                  | Description                                                                                                                              | Original RRC Field Name       |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| **DA_STATUS_NUMBER**         | **Primary Key.** The unique 7-digit number assigned to the application. Use this to join with other files.                                | `DA-STATUS-NUMBER`            |
-| **API_NUMBER**               | The American Petroleum Institute (API) well number. A standard, unique identifier for the well bore.                                     | `API-NUMBER`                  |
-| **DA_OPERATOR_NAME**         | The name of the company that filed the permit application.                                                                               | `DA-OPERATOR-NAME`            |
-| **DA_PERMIT_LEASE_NAME**     | The name of the lease where the well is located.                                                                                         | `DA-PERMIT-LEASE-NAME`        |
-| **DA_WELL_NUMBER**           | The well number as assigned by the operator.                                                                                             | `DA-PERMIT-WELL-NUMBER`       |
-| **SURFACE_LATITUDE**         | The geographic latitude of the well's surface location (in NAD27 datum).                                                                 | `DA-SURF-LOC-LATITUDE`        |
-| **SURFACE_LONGITUDE**        | The geographic longitude of the well's surface location (in NAD27 datum). **This is the primary location data.**                           | `DA-SURF-LOC-LONGITUDE`       |
-| **BH_LATITUDE**              | The latitude of the well's bottom-hole location. For directional or horizontal wells, this will differ from the surface location.           | `DA-BOTTOM-HOLE-LATITUDE`     |
-| **BH_LONGITUDE**             | The longitude of the well's bottom-hole location.                                                                                        | `DA-BOTTOM-HOLE-LONGITUDE`    |
-| **DA_STATUS_OF_APP_FLAG**    | A code indicating the current status of the application (`A`=Approved, `P`=Pending, `W`=Withdrawn, etc.). See manual page II.7 for details. | `DA-STATUS-OF-APP-FLAG`       |
-| **DA_WELL_STATUS**           | A code for the operational status of the well (e.g., 'W' for Final Completion). See manual appendix B (page IV.1) for a full list of codes. | `DA-WELL-STATUS`              |
-| **DA_PERMIT_TOTAL_DEPTH**    | The total proposed depth of the well, in feet.                                                                                           | `DA-PERMIT-TOTAL-DEPTH`       |
-| **DA_PERMIT_ISSUED_DATE**    | The date the permit was officially issued by the RRC (Format: YYYYMMDD).                                                                 | `DA-PERMIT-ISSUED-DATE`       |
-| **DA_DATE_APP_RECEIVED**     | The date the permit application was received by the RRC (Format: YYYYMMDD).                                                              | `DA-DATE-APP-RECEIVED`        |
-| **DA_PERMIT_COUNTY_CODE**    | A 3-digit code for the county where the well is located. See manual appendix A (page III.1) for a list of county names and codes.        | `DA-PERMIT-COUNTY-CODE`       |
-| **DA_PERMIT_DISTRICT**       | The 2-digit RRC district number.                                                                                                         | `DA-PERMIT-DISTRICT`          |
-| **DA_DIRECTIONAL_WELL_FLAG** | 'Y' if the well is intentionally drilled at an angle (directional). 'N' otherwise.                                                       | `DA-DIRECTIONAL-WELL-FLAG`    |
-| **DA_HORIZONTAL_WELL_FLAG**  | 'Y' if the well is a horizontal well. 'N' otherwise.                                                                                     | `DA-HORIZONTAL-WELL-FLAG`     |
+#### **Core Identification Columns**
+
+| Column Name            | Description                                                                                              | Original RRC Field Name |
+| ---------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------- |
+| **DA_STATUS_NUMBER**   | **Primary Key.** The unique 7-digit number assigned to the application. Use this to join with other files. | `DA-STATUS-NUMBER`      |
+| **API_NUMBER**         | The American Petroleum Institute (API) well number. A standard, unique identifier for the well bore.     | `API-NUMBER`            |
+| **DA_OPERATOR_NAME**   | The name of the company that filed the permit application.                                               | `DA-OPERATOR-NAME`      |
+| **DA_PERMIT_LEASE_NAME** | The name of the lease where the well is located.                                                         | `DA-PERMIT-LEASE-NAME`  |
+| **DA_WELL_NUMBER**     | The well number as assigned by the operator.                                                             | `DA-PERMIT-WELL-NUMBER` |
+
+---
+
+#### **Geographic and Location Columns**
+
+| Column Name                  | Description                                                                                                                              | Original RRC Field Name          |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| **SURFACE_LATITUDE**         | The geographic latitude of the well's surface location (in NAD27 datum).                                                                 | `DA-SURF-LOC-LATITUDE`           |
+| **SURFACE_LONGITUDE**        | The geographic longitude of the well's surface location (in NAD27 datum). **This is the primary location data.**                           | `DA-SURF-LOC-LONGITUDE`          |
+| **BH_LATITUDE**              | The latitude of the well's bottom-hole location. For directional or horizontal wells, this will differ from the surface location.           | `DA-BOTTOM-HOLE-LATITUDE`        |
+| **BH_LONGITUDE**             | The longitude of the well's bottom-hole location.                                                                                        | `DA-BOTTOM-HOLE-LONGITUDE`       |
+| **DA_PERMIT_COUNTY_CODE**    | A 3-digit code for the county where the well is located. See manual appendix A (page III.1) for a list of county names and codes.        | `DA-PERMIT-COUNTY-CODE`          |
+| **DA_PERMIT_DISTRICT**       | The 2-digit RRC district number.                                                                                                         | `DA-PERMIT-DISTRICT`             |
+| **DA_SURFACE_NEAREST_CITY**  | The name of the nearest city to the well location.                                                                                       | `DA-SURFACE-NEAREST-CITY`        |
+| **DA_OLD_SURFACE_LOCATION**  | The legacy, free-form text description of the well's location (e.g., section, block, survey). May be useful for cross-referencing.        | `DA-OLD-SURFACE-LOCATION`        |
+| **DA_NEAREST_WELL**          | The legacy text description of the nearest well.                                                                                         | `DA-NEAREST-WELL`                |
+
+---
+
+#### **Well Specification and Status Columns**
+
+| Column Name                  | Description                                                                                                                              | Original RRC Field Name          |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| **DA_STATUS_OF_APP_FLAG**    | A code indicating the current status of the application (`A`=Approved, `P`=Pending, `W`=Withdrawn, etc.). See manual page II.7 for details. | `DA-STATUS-OF-APP-FLAG`          |
+| **DA_WELL_STATUS**           | A code for the operational status of the well (e.g., 'W' for Final Completion). See manual appendix B (page IV.1) for a full list of codes. | `DA-WELL-STATUS`                 |
+| **DA_PERMIT_TOTAL_DEPTH**    | The total proposed depth of the well, in feet.                                                                                           | `DA-PERMIT-TOTAL-DEPTH`          |
+| **DA_SURFACE_ACRES**         | The number of acres in the lease or unit associated with the well.                                                                       | `DA-SURFACE-ACRES`               |
+| **DA_DIRECTIONAL_WELL_FLAG** | 'Y' if the well is intentionally drilled at an angle (directional). 'N' otherwise.                                                       | `DA-DIRECTIONAL-WELL-FLAG`       |
+| **DA_HORIZONTAL_WELL_FLAG**  | 'Y' if the well is a horizontal well. 'N' otherwise.                                                                                     | `DA-HORIZONTAL-WELL-FLAG`        |
+
+---
+
+#### **Date Columns** (Format: YYYYMMDD)
+
+| Column Name               | Description                                                        | Original RRC Field Name |
+| ------------------------- | ------------------------------------------------------------------ | ----------------------- |
+| **DA_PERMIT_ISSUED_DATE** | The date the permit was officially issued by the RRC.              | `DA-PERMIT-ISSUED-DATE` |
+| **DA_DATE_APP_RECEIVED**  | The date the permit application was received by the RRC.           | `DA-DATE-APP-RECEIVED`  |
+| **DA_RECEIVED_DATE**      | The date the permit was received. Often identical to the above.    | `DA-RECEIVED-DATE`      |
+
+---
 
 ### 2. `permit_fields.csv`
 
 This file contains records of the oil and gas fields associated with each permit. A single permit can be associated with multiple fields.
 
-| Column Name            | Description                                                                                                                                  |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| **PARENT_STATUS_NUMBER** | **Foreign Key.** The `DA_STATUS_NUMBER` from the `permits.csv` file that this record belongs to. Use this column to join the files.        |
-| **DA_FIELD_NUMBER**    | The unique 8-digit RRC number for the oil or gas field.                                                                                      |
+| Column Name                        | Description                                                                                                                                  |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **PARENT_STATUS_NUMBER**           | **Foreign Key.** The `DA_STATUS_NUMBER` from the `permits.csv` file that this record belongs to. Use this column to join the files.        |
+| **DA_FIELD_NUMBER**                | The unique 8-digit RRC number for the oil or gas field.                                                                                      |
 | **DA_FIELD_APPLICATION_WELL_CODE** | A code for the type of well proposed for this field (e.g., 'O' for Oil, 'G' for Gas). See manual appendix C (page V.1) for codes. |
-| **DA_FIELD_COMPLETION_DATE** | The date the well completion was reported for this specific field (Format: YYYYMMDD).                                                 |
+| **DA_FIELD_COMPLETION_DATE**       | The date the well completion was reported for this specific field (Format: YYYYMMDD).                                                        |
 
 ### 3. `permit_restrictions.csv`
 
@@ -53,7 +83,7 @@ This file lists any special conditions or restrictions placed on the permit by t
 | **PARENT_STATUS_NUMBER**     | **Foreign Key.** The `DA_STATUS_NUMBER` from `permits.csv` that this restriction applies to.                                             |
 | **RESTRICTION_TYPE**         | Indicates if the restriction is a standard, pre-defined text ('CANNED') or a custom-written one ('FREE_FORM').                           |
 | **DA_CAN_RESTR_REMARK**      | The text of the restriction. This will be populated for both Canned and Free-Form types (though the field name originates from Canned). |
-| **DA_FREE_RESTR_REMARK**     | The text of the restriction. This will be populated for both Canned and Free-Form types. Note: `_CAN_` and `_FREE_` fields are combined in the output for simplicity.|
+| **DA_FREE_RESTR_REMARK**     | The text of the restriction. Note: `_CAN_` and `_FREE_` fields contain the same conceptual data; both are included for completeness.     |
 | **DA_CAN_RESTR_FLAG**        | A flag indicating if the restriction applies to the entire permit ('P') or just a specific field ('F').                                  |
 | **DA_FREE_RESTR_FLAG**       | Same as above, for Free Form restrictions.                                                                                             |
 
