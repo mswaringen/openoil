@@ -36,7 +36,6 @@ This is the main file and contains the core information for each drilling permit
 | **DA_PERMIT_DISTRICT**       | The 2-digit RRC district number.                                                                                                         | `DA-PERMIT-DISTRICT`             |
 | **DA_SURFACE_NEAREST_CITY**  | The name of the nearest city to the well location.                                                                                       | `DA-SURFACE-NEAREST-CITY`        |
 | **DA_OLD_SURFACE_LOCATION**  | The legacy, free-form text description of the well's location (e.g., section, block, survey). May be useful for cross-referencing.        | `DA-OLD-SURFACE-LOCATION`        |
-| **DA_NEAREST_WELL**          | The legacy text description of the nearest well.                                                                                         | `DA-NEAREST-WELL`                |
 
 ---
 
@@ -47,7 +46,7 @@ This is the main file and contains the core information for each drilling permit
 | **DA_STATUS_OF_APP_FLAG**    | A code indicating the current status of the application (`A`=Approved, `P`=Pending, `W`=Withdrawn, etc.). See manual page II.7 for details. | `DA-STATUS-OF-APP-FLAG`          |
 | **DA_WELL_STATUS**           | A code for the operational status of the well (e.g., 'W' for Final Completion). See manual appendix B (page IV.1) for a full list of codes. | `DA-WELL-STATUS`                 |
 | **DA_PERMIT_TOTAL_DEPTH**    | The total proposed depth of the well, in feet.                                                                                           | `DA-PERMIT-TOTAL-DEPTH`          |
-| **DA_SURFACE_ACRES**         | The number of acres in the lease or unit associated with the well.                                                                       | `DA-SURFACE-ACRES`               |
+| **DA_SURFACE_ACRES**         | **Important:** Represents the total acreage of the lease, **or more commonly, the entire pooled unit or field** associated with the permit. For large projects (e.g., gas storage, waterfloods), this value can be very large and **does not represent the small drill-site acreage**. | `DA-SURFACE-ACRES`               |
 | **DA_DIRECTIONAL_WELL_FLAG** | 'Y' if the well is intentionally drilled at an angle (directional). 'N' otherwise.                                                       | `DA-DIRECTIONAL-WELL-FLAG`       |
 | **DA_HORIZONTAL_WELL_FLAG**  | 'Y' if the well is a horizontal well. 'N' otherwise.                                                                                     | `DA-HORIZONTAL-WELL-FLAG`        |
 
@@ -82,10 +81,8 @@ This file lists any special conditions or restrictions placed on the permit by t
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | **PARENT_STATUS_NUMBER**     | **Foreign Key.** The `DA_STATUS_NUMBER` from `permits.csv` that this restriction applies to.                                             |
 | **RESTRICTION_TYPE**         | Indicates if the restriction is a standard, pre-defined text ('CANNED') or a custom-written one ('FREE_FORM').                           |
-| **DA_CAN_RESTR_REMARK**      | The text of the restriction. This will be populated for both Canned and Free-Form types (though the field name originates from Canned). |
-| **DA_FREE_RESTR_REMARK**     | The text of the restriction. Note: `_CAN_` and `_FREE_` fields contain the same conceptual data; both are included for completeness.     |
-| **DA_CAN_RESTR_FLAG**        | A flag indicating if the restriction applies to the entire permit ('P') or just a specific field ('F').                                  |
-| **DA_FREE_RESTR_FLAG**       | Same as above, for Free Form restrictions.                                                                                             |
+| **DA_CAN_RESTR_REMARK** / **DA_FREE_RESTR_REMARK** | The text of the restriction. The two columns capture the different underlying record types but contain the same kind of information. |
+| **DA_CAN_RESTR_FLAG** / **DA_FREE_RESTR_FLAG** | A flag indicating if the restriction applies to the entire permit ('P') or just a specific field ('F').                |
 
 ## How to Use This Data
 
