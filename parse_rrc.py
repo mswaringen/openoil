@@ -4,14 +4,10 @@ from collections import defaultdict
 
 # --- Configuration ---
 INPUT_DAT_FILE = 'data/raw/daf420.dat.06-30-2025'
-OUTPUT_DIR = 'raw/rrc_output'
+OUTPUT_DIR = 'data/rrc_output'
 RECORD_LENGTH = 510
 
-# ==============================================================================
-# RECORD LAYOUTS (MAPPING) FROM THE RRC MANUAL - EXPANDED AND CORRECTED
-# Note: All positions are 0-indexed (Position 1 in manual is index 0 here)
-# ==============================================================================
-
+# --- RECORD LAYOUTS (UNCHANGED) ---
 RECORD_MAPS = {
     # Record ID '01': DA-STATUS-ROOT (Page II.2)
     '01': [
@@ -87,6 +83,7 @@ RECORD_MAPS = {
     ],
 }
 
+
 def parse_line(line, record_map):
     """Parses a single fixed-width line based on the provided map."""
     record_data = {}
@@ -96,8 +93,12 @@ def parse_line(line, record_map):
     return record_data
 
 def format_implied_decimal(value, integer_part_len):
-    """Converts a string with an implied decimal into a proper float string."""
-    if not value or not value.replace('-', '').replace('.', '').isdigit():
+    """Converts a string of digits with an implied decimal into a proper float string."""
+    # If the value already has a decimal, don't touch it.
+    if '.' in value:
+        return value
+        
+    if not value or not value.replace('-', '').isdigit():
         return value
 
     is_negative = value.startswith('-')
@@ -164,23 +165,28 @@ def process_file():
                     restriction_data['RESTRICTION_TYPE'] = 'CANNED' if record_id == '06' else 'FREE_FORM'
                     all_restrictions.append(restriction_data)
                 
+                # --- THIS IS THE CORRECTED SECTION ---
                 elif record_id == '14':
                     gis_data = parse_line(line, record_map)
-                    current_permit_data['SURFACE_LATITUDE'] = format_implied_decimal(gis_data.get('SURFACE_LATITUDE', ''), 2)
-                    current_permit_data['SURFACE_LONGITUDE'] = format_implied_decimal(gis_data.get('SURFACE_LONGITUDE', ''), 3)
+                    # These fields already have decimals, so we assign them directly.
+                    current_permit_data['SURFACE_LATITUDE'] = gis_data.get('SURFACE_LATITUDE')
+                    current_permit_data['SURFACE_LONGITUDE'] = gis_data.get('SURFACE_LONGITUDE')
                     
                 elif record_id == '15':
                     gis_data = parse_line(line, record_map)
-                    current_permit_data['BH_LATITUDE'] = format_implied_decimal(gis_data.get('BH_LATITUDE', ''), 2)
-                    current_permit_data['BH_LONGITUDE'] = format_implied_decimal(gis_data.get('BH_LONGITUDE', ''), 3)
+                    # These fields also have decimals, assign directly.
+                    current_permit_data['BH_LATITUDE'] = gis_data.get('BH_LATITUDE')
+                    current_permit_data['BH_LONGITUDE'] = gis_data.get('BH_LONGITUDE')
 
     if current_permit_data:
         permits.append(current_permit_data)
 
     # --- Write Output Files ---
+    # This section is unchanged but will now work with the corrected data.
     permits_csv_path = os.path.join(OUTPUT_DIR, 'permits.csv')
     if permits:
-        permit_headers = sorted(list(set(key for p_data in permits for key in p_data.keys())))
+        all_keys = set(key for p_data in permits for key in p_data.keys())
+        permit_headers = sorted(list(all_keys))
         with open(permits_csv_path, 'w', newline='', encoding='utf-8') as f_out:
             writer = csv.DictWriter(f_out, fieldnames=permit_headers, extrasaction='ignore')
             writer.writeheader()
@@ -189,7 +195,6 @@ def process_file():
 
     fields_csv_path = os.path.join(OUTPUT_DIR, 'permit_fields.csv')
     if all_fields:
-        # CORRECTED: Gather keys from ALL field records, not just the first one.
         all_field_keys = set(key for field in all_fields for key in field.keys())
         field_headers = sorted(list(all_field_keys))
         with open(fields_csv_path, 'w', newline='', encoding='utf-8') as f_out:
@@ -200,7 +205,6 @@ def process_file():
         
     restrictions_csv_path = os.path.join(OUTPUT_DIR, 'permit_restrictions.csv')
     if all_restrictions:
-        # CORRECTED: Gather keys from ALL restriction records to handle different types.
         all_res_keys = set(key for res in all_restrictions for key in res.keys())
         res_headers = sorted(list(all_res_keys))
         with open(restrictions_csv_path, 'w', newline='', encoding='utf-8') as f_out:
